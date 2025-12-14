@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MaintenanceRecord extends Model
 {
@@ -20,7 +21,7 @@ class MaintenanceRecord extends Model
         'cost' => 'decimal:2',
     ];
 
-    public function vehicle()
+    public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
     }

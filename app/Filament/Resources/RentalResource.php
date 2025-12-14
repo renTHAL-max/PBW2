@@ -31,11 +31,16 @@ class RentalResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Hidden::make('user_id')
+                    ->default(auth()->id())
+                    ->required(),
+                    
                 Forms\Components\Section::make('Informasi Pelanggan & Tanggal')
                     ->schema([
                         Forms\Components\Select::make('customer_id')
                             ->label('Pelanggan')
                             ->relationship('customer', 'name')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name ?? 'N/A')
                             ->required()
                             ->searchable()
                             ->preload()
@@ -58,14 +63,34 @@ class RentalResource extends Resource
                             ->label('Tanggal Mulai')
                             ->required()
                             ->default(now())
-                            ->minDate(now())
+                            ->maxDate(now()->addYears(2))
                             ->live()
                             ->afterStateUpdated(function (Get $get, Set $set, $state) {
                                 $endDate = $get('end_date');
                                 if ($state && $endDate) {
-                                    $days = Carbon::parse($state)->diffInDays(Carbon::parse($endDate)) + 1;
-                                    $set('duration_days', $days);
+                                    $start = Carbon::parse($state);
+                                    $end = Carbon::parse($endDate);
+                                    
+                                    // Validasi: end date harus >= start date
+                                    if ($end->lessThan($start)) {
+                                        $set('end_date', $state);
+                                        $set('duration_days', 1);
+                                    } else {
+                                        $days = $start->diffInDays($end) + 1;
+                                        $set('duration_days', max(1, $days));
+                                    }
+                                    
                                     static::recalculateTotal($get, $set);
+                                    
+                                    // Update days di semua items
+                                    $items = $get('items') ?? [];
+                                    foreach ($items as $key => $item) {
+                                        if (isset($item['price_per_day'])) {
+                                            $duration = $get('duration_days') ?? 1;
+                                            $set("items.{$key}.days", $duration);
+                                            $set("items.{$key}.subtotal", $item['price_per_day'] * $duration);
+                                        }
+                                    }
                                 }
                             })
                             ->columnSpan(1),
@@ -74,13 +99,29 @@ class RentalResource extends Resource
                             ->label('Tanggal Selesai')
                             ->required()
                             ->minDate(fn (Get $get) => $get('start_date') ?: now())
+                            ->maxDate(now()->addYears(2))
                             ->live()
                             ->afterStateUpdated(function (Get $get, Set $set, $state) {
                                 $startDate = $get('start_date');
                                 if ($startDate && $state) {
-                                    $days = Carbon::parse($startDate)->diffInDays(Carbon::parse($state)) + 1;
+                                    $start = Carbon::parse($startDate);
+                                    $end = Carbon::parse($state);
+                                    
+                                    // Hitung durasi
+                                    $days = $start->diffInDays($end) + 1;
+                                    $days = max(1, $days);
                                     $set('duration_days', $days);
+                                    
                                     static::recalculateTotal($get, $set);
+                                    
+                                    // Update days di semua items
+                                    $items = $get('items') ?? [];
+                                    foreach ($items as $key => $item) {
+                                        if (isset($item['price_per_day'])) {
+                                            $set("items.{$key}.days", $days);
+                                            $set("items.{$key}.subtotal", $item['price_per_day'] * $days);
+                                        }
+                                    }
                                 }
                             })
                             ->columnSpan(1),
@@ -122,7 +163,12 @@ class RentalResource extends Resource
                                         if (!$startDate || !$endDate) {
                                             return Vehicle::where('status', 'tersedia')
                                                 ->get()
-                                                ->pluck('full_name', 'id');
+                                                ->mapWithKeys(function ($vehicle) {
+                                                    $label = ($vehicle->brand ?? 'Unknown') . ' ' . 
+                                                             ($vehicle->model ?? '') . ' - ' . 
+                                                             ($vehicle->license_plate ?? 'No Plate');
+                                                    return [$vehicle->id => $label];
+                                                });
                                         }
                                         
                                         return Vehicle::where('status', 'tersedia')
@@ -130,7 +176,12 @@ class RentalResource extends Resource
                                             ->filter(function ($vehicle) use ($startDate, $endDate) {
                                                 return $vehicle->isAvailableForRent($startDate, $endDate);
                                             })
-                                            ->mapWithKeys(fn ($v) => [$v->id => $v->brand . ' ' . $v->model . ' - ' . $v->license_plate]);
+                                            ->mapWithKeys(function ($vehicle) {
+                                                $label = ($vehicle->brand ?? 'Unknown') . ' ' . 
+                                                         ($vehicle->model ?? '') . ' - ' . 
+                                                         ($vehicle->license_plate ?? 'No Plate');
+                                                return [$vehicle->id => $label];
+                                            });
                                     })
                                     ->required()
                                     ->searchable()
@@ -139,17 +190,25 @@ class RentalResource extends Resource
                                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
                                         if ($state) {
                                             $vehicle = Vehicle::find($state);
-                                            $set('price_per_day', $vehicle->price_per_day);
-                                            
-                                            $days = $get('../../duration_days') ?? 1;
-                                            $set('days', $days);
-                                            $set('subtotal', $vehicle->price_per_day * $days);
-                                            
-                                            // Recalculate parent total
-                                            $items = $get('../../items');
-                                            $subtotal = collect($items)->sum('subtotal');
-                                            $set('../../subtotal', $subtotal);
-                                            $set('../../total_amount', $subtotal);
+                                            if ($vehicle) {
+                                                $pricePerDay = $vehicle->price_per_day ?? 0;
+                                                $set('price_per_day', $pricePerDay);
+                                                
+                                                $days = $get('../../duration_days') ?? 1;
+                                                $days = max(1, abs($days));
+                                                
+                                                $set('days', $days);
+                                                $set('subtotal', $pricePerDay * $days);
+                                                
+                                                // Recalculate parent total
+                                                $items = $get('../../items') ?? [];
+                                                $subtotal = collect($items)->sum(function ($item) {
+                                                    return ($item['subtotal'] ?? 0) > 0 ? $item['subtotal'] : 0;
+                                                });
+                                                
+                                                $set('../../subtotal', $subtotal);
+                                                $set('../../total_amount', $subtotal);
+                                            }
                                         }
                                     })
                                     ->columnSpan(3),
@@ -275,8 +334,13 @@ class RentalResource extends Resource
 
     protected static function recalculateTotal(Get $get, Set $set): void
     {
-        $items = collect($get('items'));
-        $subtotal = $items->sum('subtotal');
+        $items = collect($get('items') ?? []);
+        $subtotal = $items->sum(function ($item) {
+            $itemSubtotal = $item['subtotal'] ?? 0;
+            return $itemSubtotal > 0 ? $itemSubtotal : 0;
+        });
+        
+        $subtotal = max(0, $subtotal);
         
         $set('subtotal', $subtotal);
         $set('total_amount', $subtotal + ($get('late_fee') ?? 0));

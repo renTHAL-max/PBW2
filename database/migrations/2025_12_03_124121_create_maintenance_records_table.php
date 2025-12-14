@@ -12,10 +12,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
             $table->date('maintenance_date');
-            $table->enum('type', ['service', 'repair', 'inspection']);
+            $table->string('type', 100); // Ubah dari ENUM ke STRING
             $table->text('description');
             $table->decimal('cost', 12, 2);
-            $table->enum('status', ['scheduled', 'in_progress', 'completed'])->default('scheduled');
+            $table->string('status', 50)->default('scheduled'); // Ubah dari ENUM ke STRING
             $table->timestamps();
         });
     }
