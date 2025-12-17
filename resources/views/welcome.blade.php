@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rental Kendaraan - Sistem Manajemen</title>
-    
-    <!-- Bootstrap 5 CSS -->
+    <title>Rental Kendaraan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
     <style>
         * {
             margin: 0;
@@ -19,401 +14,499 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.6;
         }
 
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
+        .navbar {
+            background: #fff;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
+        .navbar-brand {
             font-size: 1.5rem;
-            color: #9ca3af;
-            margin-bottom: 2rem;
             font-weight: 300;
+            color: #000;
+            letter-spacing: 2px;
         }
 
-        .feature-card {
-            background: rgba(26, 26, 26, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            height: 100%;
+        .nav-link {
+            color: #000;
+            font-weight: 300;
+            margin: 0 1.5rem;
+            font-size: 0.95rem;
+            transition: opacity 0.3s;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        .nav-link:hover {
+            opacity: 0.6;
         }
 
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
-            color: white;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        .btn-admin {
+            background: #000;
+            color: #fff;
             border: none;
-            padding: 1rem 3rem;
-            font-size: 1.2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            transition: opacity 0.3s;
         }
 
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        .btn-admin:hover {
+            opacity: 0.8;
         }
 
-        .btn-outline-custom {
-            border: 2px solid #3b82f6;
-            color: #3b82f6;
-            padding: 1rem 3rem;
-            font-size: 1.2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            background: transparent;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-custom:hover {
-            background: #3b82f6;
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        .car-illustration {
-            position: relative;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-30px);
-            }
-        }
-
-        .stats-box {
-            background: rgba(26, 26, 26, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
+        .hero {
+            padding: 120px 0 80px;
             text-align: center;
         }
 
-        .stats-number {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
         }
 
-        .stats-label {
-            color: #9ca3af;
-            font-size: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .decorative-element {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .decorative-element-1 {
-            top: -250px;
-            right: -250px;
-        }
-
-        .decorative-element-2 {
-            bottom: -250px;
-            left: -250px;
-        }
-
-        .car-svg {
-            width: 100%;
+        .hero p {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 300;
             max-width: 600px;
-            height: auto;
+            margin: 0 auto 3rem;
+        }
+
+        .car-grid {
+            padding: 60px 0;
+        }
+
+        .car-item {
+            margin-bottom: 4rem;
+            cursor: pointer;
+        }
+
+        .car-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: #f5f5f5;
+            aspect-ratio: 16/10;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .car-item:hover .car-image {
+            transform: scale(1.05);
+        }
+
+        .car-info {
+            padding: 2rem 0;
+        }
+
+        .car-name {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .car-category {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .car-specs {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .car-price {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .btn-book {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            transition: opacity 0.3s;
+        }
+
+        .btn-book:hover {
+            opacity: 0.8;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 0;
+        }
+
+        .modal-header {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 2rem;
+        }
+
+        .modal-title {
+            font-weight: 300;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-label {
+            font-weight: 300;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #ddd;
+            border-radius: 0;
+            padding: 0.8rem;
+            font-weight: 300;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #000;
+            box-shadow: none;
+        }
+
+        .booking-summary {
+            background: #f9f9f9;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .summary-label {
+            color: #666;
+            font-weight: 300;
+        }
+
+        .summary-value {
+            font-weight: 400;
+        }
+
+        .total-row {
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .total-row .summary-value {
+            font-size: 1.3rem;
+        }
+
+        .btn-submit {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 1rem;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 300;
+            transition: opacity 0.3s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.8;
         }
 
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.2rem;
+            .hero h1 {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="decorative-element decorative-element-1"></div>
-    <div class="decorative-element decorative-element-2"></div>
-
-    <div class="hero-section">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 hero-content">
-                    <h1 class="hero-title">
-                        Rental<br>Kendaraan
-                    </h1>
-                    <p class="hero-subtitle">
-                        Sistem manajemen rental kendaraan yang powerful dan mudah digunakan. 
-                        Kelola armada, pelanggan, dan transaksi dalam satu platform.
-                    </p>
-                    <div class="d-flex gap-3 mb-5">
-                        <a href="/admin" class="btn btn-primary-custom">
-                             <i class="fas fa-sign-in-alt me-2"></i>Masuk Dashboard
-                        </a>
-                        </a>
-                        <a href="#features" class="btn btn-outline-custom">
-                            <i class="fas fa-info-circle me-2"></i>Pelajari Lebih Lanjut
-                        </a>
-                    </div>
+            <a class="navbar-brand" href="#">RENTAL</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#models">Models</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a href="/dashboard" class="btn btn-admin">Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-                    <!-- Quick Stats -->
-                    <div class="row g-3">
-                        <div class="col-4">
-                            <div class="stats-box">
-                                <div class="stats-number">50+</div>
-                                <div class="stats-label">Kendaraan</div>
-                            </div>
+    <section class="hero">
+        <div class="container">
+            <h1>Drive Your Dreams</h1>
+            <p>Experience luxury and performance with our premium vehicle collection</p>
+        </div>
+    </section>
+
+    <section id="models" class="car-grid">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 car-item" onclick="openModal('Toyota Avanza', 350000, 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800')">
+                    <div class="car-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800" class="car-image" alt="Toyota Avanza">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Toyota Avanza</h3>
+                        <p class="car-category">MPV</p>
+                        <div class="car-specs">
+                            <span>7 Seats</span>
+                            <span>Manual</span>
+                            <span>Gasoline</span>
                         </div>
-                        <div class="col-4">
-                            <div class="stats-box">
-                                <div class="stats-number">100+</div>
-                                <div class="stats-label">Pelanggan</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stats-box">
-                                <div class="stats-number">500+</div>
-                                <div class="stats-label">Transaksi</div>
-                            </div>
-                        </div>
+                        <div class="car-price">Rp 350.000 / day</div>
+                        <button class="btn btn-book">Book Now</button>
                     </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="car-illustration">
-                        <svg class="car-svg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Car Body -->
-                            <g id="car">
-                                <!-- Main Body -->
-                                <rect x="150" y="300" width="500" height="150" rx="20" fill="#3b82f6" opacity="0.9"/>
-                                
-                                <!-- Roof -->
-                                <path d="M 250 300 L 300 200 L 500 200 L 550 300 Z" fill="#2563eb" opacity="0.9"/>
-                                
-                                <!-- Windows -->
-                                <path d="M 270 290 L 310 220 L 450 220 L 490 290 Z" fill="#60a5fa" opacity="0.5"/>
-                                
-                                <!-- Front Light -->
-                                <circle cx="630" cy="375" r="15" fill="#fbbf24"/>
-                                
-                                <!-- Back Light -->
-                                <circle cx="170" cy="375" r="15" fill="#ef4444"/>
-                                
-                                <!-- Wheels -->
-                                <circle cx="250" cy="460" r="50" fill="#1f2937" stroke="#3b82f6" stroke-width="5"/>
-                                <circle cx="250" cy="460" r="30" fill="#374151"/>
-                                <circle cx="550" cy="460" r="50" fill="#1f2937" stroke="#3b82f6" stroke-width="5"/>
-                                <circle cx="550" cy="460" r="30" fill="#374151"/>
-                                
-                                <!-- Wheel Details -->
-                                <circle cx="250" cy="460" r="15" fill="#60a5fa"/>
-                                <circle cx="550" cy="460" r="15" fill="#60a5fa"/>
-                                
-                                <!-- Door Handle -->
-                                <rect x="380" y="340" width="40" height="8" rx="4" fill="#1e40af"/>
-                                
-                                <!-- Side Mirror -->
-                                <ellipse cx="140" cy="320" rx="20" ry="15" fill="#2563eb"/>
-                            </g>
-                            
-                            <!-- Road -->
-                            <rect x="0" y="510" width="800" height="90" fill="#111827" opacity="0.5"/>
-                            <rect x="0" y="550" width="100" height="10" fill="#fbbf24" opacity="0.8"/>
-                            <rect x="150" y="550" width="100" height="10" fill="#fbbf24" opacity="0.8"/>
-                            <rect x="300" y="550" width="100" height="10" fill="#fbbf24" opacity="0.8"/>
-                            <rect x="450" y="550" width="100" height="10" fill="#fbbf24" opacity="0.8"/>
-                            <rect x="600" y="550" width="100" height="10" fill="#fbbf24" opacity="0.8"/>
-                        </svg>
+                <div class="col-lg-6 car-item" onclick="openModal('Honda Jazz', 400000, 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800')">
+                    <div class="car-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800" class="car-image" alt="Honda Jazz">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Honda Jazz</h3>
+                        <p class="car-category">Hatchback</p>
+                        <div class="car-specs">
+                            <span>5 Seats</span>
+                            <span>Automatic</span>
+                            <span>Gasoline</span>
+                        </div>
+                        <div class="car-price">Rp 400.000 / day</div>
+                        <button class="btn btn-book">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 car-item" onclick="openModal('Toyota Innova', 500000, 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800')">
+                    <div class="car-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800" class="car-image" alt="Toyota Innova">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Toyota Innova</h3>
+                        <p class="car-category">MPV</p>
+                        <div class="car-specs">
+                            <span>7 Seats</span>
+                            <span>Automatic</span>
+                            <span>Diesel</span>
+                        </div>
+                        <div class="car-price">Rp 500.000 / day</div>
+                        <button class="btn btn-book">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 car-item" onclick="openModal('Honda HR-V', 550000, 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800')">
+                    <div class="car-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800" class="car-image" alt="Honda HR-V">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Honda HR-V</h3>
+                        <p class="car-category">SUV</p>
+                        <div class="car-specs">
+                            <span>5 Seats</span>
+                            <span>CVT</span>
+                            <span>Gasoline</span>
+                        </div>
+                        <div class="car-price">Rp 550.000 / day</div>
+                        <button class="btn btn-book">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 car-item" onclick="openModal('Mitsubishi Xpander', 375000, 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800')">
+                    <div class="car-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800" class="car-image" alt="Mitsubishi Xpander">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Mitsubishi Xpander</h3>
+                        <p class="car-category">MPV</p>
+                        <div class="car-specs">
+                            <span>7 Seats</span>
+                            <span>Manual</span>
+                            <span>Gasoline</span>
+                        </div>
+                        <div class="car-price">Rp 375.000 / day</div>
+                        <button class="btn btn-book">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 car-item" onclick="openModal('Toyota Fortuner', 750000, 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800')">
+                    <div class="car-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800" class="car-image" alt="Toyota Fortuner">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Toyota Fortuner</h3>
+                        <p class="car-category">SUV</p>
+                        <div class="car-specs">
+                            <span>7 Seats</span>
+                            <span>Automatic</span>
+                            <span>Diesel</span>
+                        </div>
+                        <div class="car-price">Rp 750.000 / day</div>
+                        <button class="btn btn-book">Book Now</button>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Features Section -->
-            <div id="features" class="row mt-5 pt-5">
-                <div class="col-12 text-center mb-5">
-                    <h2 class="display-4 fw-bold text-white mb-3">Fitur Unggulan</h2>
-                    <p class="text-muted fs-5">Solusi lengkap untuk mengelola bisnis rental kendaraan Anda</p>
+    <div class="modal fade" id="bookingModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">BOOKING</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-car"></i>
+                <div class="modal-body">
+                    <div class="booking-summary">
+                        <div class="d-flex align-items-center mb-4">
+                            <img id="modalImg" src="" style="width: 120px; height: 80px; object-fit: cover; margin-right: 1.5rem;">
+                            <div>
+                                <h5 id="modalName" style="font-weight: 300; font-size: 1.5rem; margin-bottom: 0.3rem;"></h5>
+                                <p id="modalPrice" style="color: #666; margin: 0; font-size: 0.95rem;"></p>
+                            </div>
                         </div>
-                        <h3 class="text-white mb-3">Manajemen Kendaraan</h3>
-                        <p class="text-muted">
-                            Kelola data kendaraan, maintenance, dan ketersediaan armada dengan mudah dan efisien.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
+                        <div class="summary-row">
+                            <span class="summary-label">Duration</span>
+                            <span class="summary-value" id="duration">-</span>
                         </div>
-                        <h3 class="text-white mb-3">Database Pelanggan</h3>
-                        <p class="text-muted">
-                            Simpan dan akses data pelanggan dengan cepat. Track riwayat transaksi setiap pelanggan.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-file-invoice-dollar"></i>
+                        <div class="summary-row total-row">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-value" id="total">Rp 0</span>
                         </div>
-                        <h3 class="text-white mb-3">Transaksi & Pembayaran</h3>
-                        <p class="text-muted">
-                            Proses transaksi rental dengan cepat. Generate invoice dan laporan keuangan otomatis.
-                        </p>
                     </div>
-                </div>
 
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
+                    <form onsubmit="return submitBooking(event)">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">ID Number</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" rows="2" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" onchange="calcTotal()" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" onchange="calcTotal()" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Driver</label>
+                                <select class="form-select" id="driver" onchange="calcTotal()">
+                                    <option value="0">Without Driver</option>
+                                    <option value="150000">With Driver (+Rp 150.000/day)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Method</label>
+                                <select class="form-select" required>
+                                    <option value="">Select Payment</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="transfer">Bank Transfer</option>
+                                    <option value="card">Credit Card</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-submit">CONFIRM BOOKING</button>
+                            </div>
                         </div>
-                        <h3 class="text-white mb-3">Dashboard & Analytics</h3>
-                        <p class="text-muted">
-                            Monitoring bisnis real-time dengan dashboard interaktif dan laporan detail.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-tools"></i>
-                        </div>
-                        <h3 class="text-white mb-3">Tracking Maintenance</h3>
-                        <p class="text-muted">
-                            Jadwalkan dan track maintenance kendaraan untuk menjaga performa armada.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="text-white mb-3">Role & Permission</h3>
-                        <p class="text-muted">
-                            Kelola akses user dengan sistem role dan permission yang fleksibel dan aman.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="row mt-5 pt-5 pb-4">
-                <div class="col-12 text-center">
-                    <p class="text-muted">
-                        &copy; {{ date('Y') }} Rental Kendaraan. All rights reserved.
-                    </p>
-                    <p class="text-muted small">
-                        Built with <i class="fas fa-heart text-danger"></i> using Laravel & Bootstrap
-                    </p>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+        let selectedPrice = 0;
+        let modal;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            modal = new bootstrap.Modal(document.getElementById('bookingModal'));
         });
 
-        // Parallax effect for decorative elements
-        document.addEventListener('mousemove', (e) => {
-            const elements = document.querySelectorAll('.decorative-element');
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
-            
-            elements.forEach((element, index) => {
-                const speed = (index + 1) * 20;
-                const x = (mouseX * speed) - (speed / 2);
-                const y = (mouseY * speed) - (speed / 2);
-                element.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
+        function openModal(name, price, img) {
+            selectedPrice = price;
+            document.getElementById('modalName').textContent = name;
+            document.getElementById('modalPrice').textContent = 'Rp ' + price.toLocaleString('id-ID') + ' / day';
+            document.getElementById('modalImg').src = img;
+            modal.show();
+        }
+
+        function calcTotal() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const driver = parseInt(document.getElementById('driver').value);
+
+            if (start && end) {
+                const d1 = new Date(start);
+                const d2 = new Date(end);
+                const days = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+
+                if (days > 0) {
+                    const total = (selectedPrice + driver) * days;
+                    document.getElementById('duration').textContent = days + ' days';
+                    document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+                }
+            }
+        }
+
+        function submitBooking(e) {
+            e.preventDefault();
+            alert('Booking submitted successfully!');
+            modal.hide();
+            e.target.reset();
+            return false;
+        }
     </script>
 </body>
 </html>
