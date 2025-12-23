@@ -17,7 +17,7 @@
         .hero h1 { font-size: 3.5rem; font-weight: 300; letter-spacing: -2px; margin-bottom: 1rem; }
         .hero p { font-size: 1.1rem; color: #666; font-weight: 300; max-width: 600px; margin: 0 auto 3rem; }
         .car-grid { padding: 60px 0; }
-        .car-item { margin-bottom: 4rem; cursor: pointer; }
+        .car-item { margin-bottom: 4rem; }
         .car-image-wrapper { position: relative; overflow: hidden; background: #f5f5f5; aspect-ratio: 16/10; }
         .car-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
         .car-item:hover .car-image { transform: scale(1.05); }
@@ -25,8 +25,9 @@
         .car-name { font-size: 1.8rem; font-weight: 300; margin-bottom: 0.5rem; letter-spacing: -1px; }
         .car-category { color: #666; font-size: 0.9rem; font-weight: 300; margin-bottom: 1.5rem; }
         .car-price { font-size: 1.3rem; font-weight: 300; margin-bottom: 1rem; }
-        .btn-book { background: #000; color: #fff; border: none; padding: 0.8rem 2.5rem; font-size: 0.9rem; font-weight: 300; transition: opacity 0.3s; }
+        .btn-book { background: #000; color: #fff; border: none; padding: 0.8rem 2.5rem; font-size: 0.9rem; font-weight: 300; transition: opacity 0.3s; width: 100%; }
         .btn-book:hover { opacity: 0.8; }
+        .btn-booked { background: #f8f9fa; color: #adb5bd; border: 1px solid #dee2e6; padding: 0.8rem 2.5rem; font-size: 0.9rem; font-weight: 300; cursor: not-allowed; width: 100%; }
         .modal-content { border: none; border-radius: 0; }
         .modal-header { background: #000; color: #fff; border: none; padding: 2rem; }
         .modal-title { font-weight: 300; font-size: 1.5rem; letter-spacing: 1px; }
@@ -40,6 +41,9 @@
         .summary-label { color: #666; font-weight: 300; }
         .total-row { border-top: 1px solid #ddd; padding-top: 1rem; margin-top: 1rem; }
         .btn-submit { background: #000; color: #fff; border: none; padding: 1rem; width: 100%; font-size: 1rem; font-weight: 300; transition: opacity 0.3s; }
+        .badge-status { font-size: 0.75rem; padding: 0.3rem 0.8rem; letter-spacing: 1px; font-weight: 300; text-transform: uppercase; margin-bottom: 1rem; display: inline-block; }
+        .status-available { background: #f0fff0; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .status-booked { background: #fff5f5; color: #c62828; border: 1px solid #ffcdd2; }
     </style>
 </head>
 <body>
@@ -65,65 +69,30 @@
     <section id="models" class="car-grid">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 car-item" onclick="openModal('Toyota Agya', 250000, 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800')">
+                @foreach($vehicles as $car)
+                <div class="col-lg-6 car-item">
                     <div class="car-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800" class="car-image">
+                        <img src="{{ $car->image ? asset('images/cars/'.$car->image) : 'https://via.placeholder.com/800x500?text='.$car->model }}" class="car-image">
                     </div>
                     <div class="car-info">
-                        <h3 class="car-name">Toyota Agya</h3>
-                        <p class="car-category">B 1234 ABC</p>
-                        <div class="car-price">IDR 250,000.00 / day</div>
-                        <button class="btn btn-book">Book Now</button>
-                    </div>
-                </div>
+                        @if($car->status == 'tersedia')
+                            <span class="badge-status status-available">Available</span>
+                        @else
+                            <span class="badge-status status-booked">Fully Booked</span>
+                        @endif
 
-                <div class="col-lg-6 car-item" onclick="openModal('Toyota Avanza', 350000, 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800')">
-                    <div class="car-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800" class="car-image">
-                    </div>
-                    <div class="car-info">
-                        <h3 class="car-name">Toyota Avanza</h3>
-                        <p class="car-category">B 5678 XYZ</p>
-                        <div class="car-price">IDR 350,000.00 / day</div>
-                        <button class="btn btn-book">Book Now</button>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 car-item" onclick="openModal('Toyota Fortuner', 600000, 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800')">
-                    <div class="car-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800" class="car-image">
-                    </div>
-                    <div class="car-info">
-                        <h3 class="car-name">Toyota Fortuner</h3>
-                        <p class="car-category">B 3456 GHI</p>
-                        <div class="car-price">IDR 600,000.00 / day</div>
-                        <button class="btn btn-book">Book Now</button>
+                        <h3 class="car-name">{{ $car->brand }} {{ $car->model }}</h3>
+                        <p class="car-category">{{ $car->plate_number }}</p>
+                        <div class="car-price">IDR {{ number_format($car->price_per_day, 0, ',', '.') }} / day</div>
+                        
+                        @if($car->status == 'tersedia')
+                            <button class="btn btn-book" onclick="openModal('{{ $car->model }}', {{ $car->price_per_day }}, '{{ $car->image ? asset('images/cars/'.$car->image) : '' }}')">Book Now</button>
+                        @else
+                            <button class="btn btn-booked" disabled>NOT AVAILABLE</button>
+                        @endif
                     </div>
                 </div>
-
-                <div class="col-lg-6 car-item" onclick="openModal('Daihatsu Xenia', 300000, 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800')">
-                    <div class="car-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800" class="car-image">
-                    </div>
-                    <div class="car-info">
-                        <h3 class="car-name">Daihatsu Xenia</h3>
-                        <p class="car-category">B 9012 DEF</p>
-                        <div class="car-price">IDR 300,000.00 / day</div>
-                        <button class="btn btn-book">Book Now</button>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 car-item" onclick="openModal('Honda Mobilio', 320000, 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800')">
-                    <div class="car-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800" class="car-image">
-                    </div>
-                    <div class="car-info">
-                        <h3 class="car-name">Honda Mobilio</h3>
-                        <p class="car-category">B 7890 JKL</p>
-                        <div class="car-price">IDR 320,000.00 / day</div>
-                        <button class="btn btn-book">Book Now</button>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -169,7 +138,7 @@
                                 <input type="email" class="form-control" name="email" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">No. KTP (ID Number)</label>
+                                <label class="form-label">No. KTP </label>
                                 <input type="text" class="form-control" name="id_card_number" required>
                             </div>
                             <div class="col-12">
@@ -220,7 +189,7 @@
             selectedPrice = price;
             document.getElementById('modalName').textContent = name;
             document.getElementById('modalPrice').textContent = 'Rp ' + price.toLocaleString('id-ID') + ' / day';
-            document.getElementById('modalImg').src = img;
+            document.getElementById('modalImg').src = img ? img : 'https://via.placeholder.com/120x80';
             modal.show();
         }
 
@@ -235,6 +204,9 @@
                     const total = selectedPrice * days;
                     document.getElementById('duration').textContent = days + ' days';
                     document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+                } else {
+                    document.getElementById('duration').textContent = '-';
+                    document.getElementById('total').textContent = 'Rp 0';
                 }
             }
         }
@@ -270,6 +242,7 @@
                     alert('Booking Successful!');
                     modal.hide();
                     e.target.reset();
+                    location.reload();
                 } else {
                     alert('Error: ' + data.message);
                 }

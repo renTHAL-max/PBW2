@@ -4,10 +4,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookingController;
+use App\Models\Vehicle;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $vehicles = Vehicle::all();
+    return view('welcome', compact('vehicles'));
 })->name('welcome');
 
 Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
