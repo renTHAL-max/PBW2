@@ -44,6 +44,7 @@
         .badge-status { font-size: 0.75rem; padding: 0.3rem 0.8rem; letter-spacing: 1px; font-weight: 300; text-transform: uppercase; margin-bottom: 1rem; display: inline-block; }
         .status-available { background: #f0fff0; color: #2e7d32; border: 1px solid #c8e6c9; }
         .status-booked { background: #fff5f5; color: #c62828; border: 1px solid #ffcdd2; }
+        .status-maintenance { background: #fffdf0; color: #856404; border: 1px solid #ffeeba; }
     </style>
 </head>
 <body>
@@ -77,6 +78,8 @@
                     <div class="car-info">
                         @if($car->status == 'tersedia')
                             <span class="badge-status status-available">Available</span>
+                        @elseif($car->status == 'dalam_perawatan')
+                            <span class="badge-status status-maintenance">Maintenance</span>
                         @else
                             <span class="badge-status status-booked">Fully Booked</span>
                         @endif
