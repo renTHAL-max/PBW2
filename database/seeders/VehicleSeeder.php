@@ -79,7 +79,7 @@ class VehicleSeeder extends Seeder
                 'year' => 2022,
                 'color' => 'Merah',
                 'price_per_day' => 320000,
-                'status' => 'sedang_disewa',
+                'status' => 'tersedia',
                 'seat_capacity' => 7,
                 'transmission' => 'manual',
                 'fuel_type' => 'bensin',
