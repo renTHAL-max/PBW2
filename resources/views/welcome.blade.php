@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RENTCAR</title>
+    <title>Rental Kendaraan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -50,11 +50,11 @@
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="#">RENTCAR</a>
+            <a class="navbar-brand" href="#">Rental Kendaraan</a>
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#models">Models</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#models">Model</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">Tentang Kami</a></li>
                 </ul>
             </div>
         </div>
@@ -62,8 +62,8 @@
 
     <section class="hero">
         <div class="container">
-            <h1>Drive Your Dreams</h1>
-            <p>Experience luxury and performance with our premium vehicle collection</p>
+            <h1>Kendarai Impian Anda</h1>
+            <p>Rasakan kemewahan dan performa dengan koleksi kendaraan premium kami</p>
         </div>
     </section>
 
@@ -77,21 +77,21 @@
                     </div>
                     <div class="car-info">
                         @if($car->status == 'tersedia')
-                            <span class="badge-status status-available">Available</span>
+                            <span class="badge-status status-available">Tersedia</span>
                         @elseif($car->status == 'dalam_perawatan')
-                            <span class="badge-status status-maintenance">Maintenance</span>
+                            <span class="badge-status status-maintenance">Perawatan</span>
                         @else
-                            <span class="badge-status status-booked">Fully Booked</span>
+                            <span class="badge-status status-booked">Sudah Dipesan</span>
                         @endif
 
                         <h3 class="car-name">{{ $car->brand }} {{ $car->model }}</h3>
                         <p class="car-category">{{ $car->plate_number }}</p>
-                        <div class="car-price">IDR {{ number_format($car->price_per_day, 0, ',', '.') }} / day</div>
+                        <div class="car-price">IDR {{ number_format($car->price_per_day, 0, ',', '.') }} / hari</div>
                         
                         @if($car->status == 'tersedia')
-                            <button class="btn btn-book" onclick="openModal('{{ $car->model }}', {{ $car->price_per_day }}, '{{ $car->image ? asset('images/cars/'.$car->image) : '' }}')">Book Now</button>
+                            <button class="btn btn-book" onclick="openModal('{{ $car->model }}', {{ $car->price_per_day }}, '{{ $car->image ? asset('images/cars/'.$car->image) : '' }}')">Sewa Sekarang</button>
                         @else
-                            <button class="btn btn-booked" disabled>NOT AVAILABLE</button>
+                            <button class="btn btn-booked" disabled>TIDAK TERSEDIA</button>
                         @endif
                     </div>
                 </div>
@@ -104,7 +104,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">BOOKING FORM</h5>
+                    <h5 class="modal-title">FORMULIR PENYEWAAN</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -117,7 +117,7 @@
                             </div>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Duration</span>
+                            <span class="summary-label">Durasi</span>
                             <span class="summary-value" id="duration">-</span>
                         </div>
                         <div class="summary-row total-row">
@@ -129,11 +129,11 @@
                     <form onsubmit="return submitBooking(event)">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Full Name</label>
+                                <label class="form-label">Nama Lengkap</label>
                                 <input type="text" class="form-control" name="name" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Phone</label>
+                                <label class="form-label">Nomor Telepon</label>
                                 <input type="tel" class="form-control" name="phone" required>
                             </div>
                             <div class="col-md-6">
@@ -145,32 +145,32 @@
                                 <input type="text" class="form-control" name="id_card_number" required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Full Address</label>
+                                <label class="form-label">Alamat Lengkap</label>
                                 <textarea class="form-control" name="address" rows="2" required></textarea>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Birth Date</label>
+                                <label class="form-label">Tanggal Lahir</label>
                                 <input type="date" class="form-control" name="birth_date" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Payment Method</label>
+                                <label class="form-label">Metode Pembayaran</label>
                                 <select class="form-select" name="payment_method" required>
-                                    <option value="">Select Payment</option>
-                                    <option value="cash">Cash</option>
-                                    <option value="transfer">Bank Transfer</option>
-                                    <option value="debit">Debit Card</option>
+                                    <option value="">Pilih Pembayaran</option>
+                                    <option value="cash">Tunai</option>
+                                    <option value="transfer">Transfer Bank</option>
+                                    <option value="debit">Kartu Debit</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Start Date</label>
+                                <label class="form-label">Tanggal Mulai</label>
                                 <input type="date" class="form-control" id="startDate" name="start_date" onchange="calcTotal()" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">End Date</label>
+                                <label class="form-label">Tanggal Selesai</label>
                                 <input type="date" class="form-control" id="endDate" name="end_date" onchange="calcTotal()" required>
                             </div>
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-submit">CONFIRM BOOKING</button>
+                                <button type="submit" class="btn btn-submit">KONFIRMASI PENYEWAAN</button>
                             </div>
                         </div>
                     </form>
@@ -191,7 +191,7 @@
         function openModal(name, price, img) {
             selectedPrice = price;
             document.getElementById('modalName').textContent = name;
-            document.getElementById('modalPrice').textContent = 'Rp ' + price.toLocaleString('id-ID') + ' / day';
+            document.getElementById('modalPrice').textContent = 'Rp ' + price.toLocaleString('id-ID') + ' / hari';
             document.getElementById('modalImg').src = img ? img : 'https://via.placeholder.com/120x80';
             modal.show();
         }
@@ -205,7 +205,7 @@
                 const days = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
                 if (days > 0) {
                     const total = selectedPrice * days;
-                    document.getElementById('duration').textContent = days + ' days';
+                    document.getElementById('duration').textContent = days + ' hari';
                     document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
                 } else {
                     document.getElementById('duration').textContent = '-';
@@ -242,7 +242,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message === 'Success') {
-                    alert('Booking Successful!');
+                    alert('Penyewaan Berhasil!');
                     modal.hide();
                     e.target.reset();
                     location.reload();
@@ -250,7 +250,7 @@
                     alert('Error: ' + data.message);
                 }
             })
-            .catch(error => alert('Something went wrong.'));
+            .catch(error => alert('Terjadi kesalahan.'));
             return false;
         }
     </script>
